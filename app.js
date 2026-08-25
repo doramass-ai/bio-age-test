@@ -36,7 +36,7 @@ const MMOL_TO_MGDL = 38.67; // ХС-ЛПВП: ммоль/л → мг/дл
 const LINKS = {
   threadsFallback: "https://www.threads.com",
   wowfit: "https://wowfit.ru",
-  telegramBot: "https://t.me/wowfit_bot", // TODO: подставить реальный юзернейм бота
+  // telegramBot: "https://t.me/<бот>", // бот ещё не создан — кнопка «Узнать позже» скрыта
 };
 function threadsUrl() {
   const post = new URLSearchParams(location.search).get("post");
@@ -220,7 +220,6 @@ function renderCover() {
       </div>
       <div class="cover-actions">
         <button class="btn-primary">Узнать свой биологический возраст</button>
-        <a class="btn-secondary" href="${LINKS.telegramBot}" target="_blank" rel="noopener">Узнать позже</a>
       </div>
       <p class="cover-note">9 вопросов, 2 минуты.<br>Анализы крови — по желанию, без них тоже посчитаем.</p>
     </div>`);
