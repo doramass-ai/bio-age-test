@@ -162,6 +162,15 @@ const topbar = document.getElementById("topbar");
 const backBtn = document.getElementById("backBtn");
 const progressFill = document.getElementById("progressFill");
 const stepCounter = document.getElementById("stepCounter");
+const laterBtn = document.getElementById("laterBtn");
+
+/* Сквозная кнопка «Пройти потом» — одна точка настройки.
+ * Сценарий ещё не выбран (бот / сбор контакта / напоминание),
+ * поэтому пока заглушка. Вся логика кнопки живёт здесь. */
+function laterAction() {
+  // TODO: подключить сценарий «пройти потом»
+}
+laterBtn.addEventListener("click", laterAction);
 
 backBtn.addEventListener("click", () => {
   if (state.step > 0) { state.dir = -1; state.step--; render(); }
@@ -178,8 +187,10 @@ function render() {
   const qSteps = STEPS.filter(s => !["cover", "calc", "result"].includes(s.kind)).length;
   const qIndex = STEPS.slice(0, state.step).filter(s => !["cover", "calc", "result"].includes(s.kind)).length;
 
+  // Топбар виден всегда — ради сквозной кнопки «Пройти потом».
+  // На обложке, экране расчёта и результате остальные элементы скрыты.
   const showBar = !["cover", "calc", "result"].includes(step.kind);
-  topbar.hidden = !showBar;
+  topbar.classList.toggle("bare", !showBar);
   if (showBar) {
     progressFill.style.width = `${Math.round((qIndex / qSteps) * 100)}%`;
     stepCounter.textContent = `${qIndex + 1} / ${qSteps}`;
@@ -212,7 +223,7 @@ function renderCover() {
     <div class="card cover">
       <div class="cover-emoji">⏳</div>
       <h1>Ваши часы идут <span>быстрее</span> или <span>медленнее</span> паспорта?</h1>
-      <p class="cover-sub">Биологический возраст — то, на сколько лет ваше тело чувствует себя «изнутри». Оценим его по 9 показателям здоровья.</p>
+      <p class="cover-sub">Биологический возраст — показатель того, насколько молодым чувствует себя ваше тело. Оценим его по 9 показателям здоровья.</p>
       <div class="cover-badges">
         <span class="badge">⏱️ 2 минуты</span>
         <span class="badge">🎓 Модель NUS</span>
