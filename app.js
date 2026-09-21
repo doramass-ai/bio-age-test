@@ -236,7 +236,7 @@ function renderCover() {
     <div class="card cover">
       <div class="cover-emoji">⏳</div>
       <h1>Ваши часы идут <span>быстрее</span> или <span>медленнее</span> паспорта?</h1>
-      <p class="cover-sub">Биологический возраст — показатель того, насколько молодым чувствует себя тело. Оценим его по 9 показателям здоровья.</p>
+      <p class="cover-sub">Биологический возраст — показатель того, насколько молодым чувствует себя тело. Оценка по 9 показателям здоровья.</p>
       <div class="cover-badges">
         <span class="badge">⏱️ 2 минуты</span>
         <span class="badge">🆓 Бесплатно</span>
