@@ -51,12 +51,12 @@ body {
 }
 .later-btn {
   display: block;
-  margin: 12px auto 0;
+  margin: 8px auto 0;
   border: none;
   background: none;
   color: var(--ink-3);
   font-family: inherit;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 400;
   padding: 4px 8px;
   cursor: pointer;
@@ -138,11 +138,11 @@ body {
 
 /* ============ Cover ============ */
 .cover { text-align: center; padding: 40px 24px; }
-.cover-emoji { font-size: 64px; margin-bottom: 18px; }
-.cover h1 { font-size: 30px; font-weight: 800; letter-spacing: -.02em; line-height: 1.15; margin-bottom: 12px; }
+.cover-emoji { font-size: 56px; margin-bottom: 16px; }
+.cover h1 { font-size: 30px; font-weight: 800; letter-spacing: -.02em; line-height: 1.15; margin-bottom: 16px; }
 .cover h1 span { color: var(--accent); }
-.cover-sub { font-size: 16px; line-height: 1.55; color: var(--ink-2); margin-bottom: 22px; }
-.cover-badges { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 26px; }
+.cover-sub { font-size: 19px; line-height: 1.5; color: var(--ink-2); margin-bottom: 24px; }
+.cover-badges { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 32px; }
 .badge {
   font-size: 13px; font-weight: 600;
   background: var(--neutral-soft);
