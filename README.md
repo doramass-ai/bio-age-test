@@ -2,7 +2,7 @@
 
 Веб-квиз: считает биологический возраст по 9 показателям здоровья и показывает разрыв с паспортным возрастом. Портирован из GPT «Healthspan Copilot» (National University of Singapore).
 
-**Прод:** https://bio-age-test-one.vercel.app
+**Прод:** https://cn.wowfit.pro
 
 ---
 
@@ -13,7 +13,7 @@
 Кнопка «💬 Вернуться в Threads и поделиться» на экране результата ведёт в **тот пост, из которого человек пришёл**. Для этого при публикации ссылки на квиз добавьте параметр `post` с URL самого поста:
 
 ```
-https://bio-age-test-one.vercel.app/?post=https://www.threads.com/@wowfit/post/XXXXX
+https://cn.wowfit.pro/?post=https://www.threads.com/@wowfit/post/XXXXX
 ```
 
 - У каждого поста может быть своя ссылка — кнопка вернёт человека именно в него (механика виральности: вернулся → прокомментировал).
@@ -49,14 +49,18 @@ app.js       — модель (MODEL), ссылки (LINKS), конфиг шаг
 Локальный запуск: любой статический сервер, например:
 
 ```
-python3 -m http.server 8823 -d bio-age-test
+python3 -m http.server 8823 -d sandbox/bio-age-test
 ```
 
-Деплой (проект `bio-age-test`, команда `wow-fit` на Vercel):
+Деплой (проект `bio-age-test-dora`, команда `wow-fit` на Vercel).
+Проект уже привязан к папке — `vercel link` повторять не нужно:
 
 ```
-cd bio-age-test && vercel deploy --prod
+cd sandbox/bio-age-test && npx vercel deploy --prod
 ```
+
+Не перепутайте: в той же команде Vercel есть проект `bio-age-test`
+(`bio-age-test-one.vercel.app`) — это референс-пример босса, не наш. Деплоить туда не нужно.
 
 ### 6. Идеи следующих шагов
 
