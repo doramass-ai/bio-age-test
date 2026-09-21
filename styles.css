@@ -55,21 +55,22 @@ body {
 .topbar.bare { justify-content: flex-end; }
 .later-btn {
   border: none;
-  background: rgba(255, 255, 255, .75);
-  backdrop-filter: blur(8px);
+  background: none;
   color: var(--ink-3);
   font-family: inherit;
   font-size: 13px;
   font-weight: 600;
   white-space: nowrap;
-  padding: 8px 12px;
-  border-radius: 99px;
+  padding: 4px 0;
   cursor: pointer;
   flex-shrink: 0;
-  transition: color .15s, background .15s;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  transition: color .15s;
 }
-.later-btn:hover { color: var(--ink-2); background: #fff; }
-.later-btn:active { transform: scale(.95); }
+.later-btn:hover { color: var(--accent); }
+.later-btn:active { opacity: .6; }
 .back-btn {
   border: none;
   background: var(--surface);
