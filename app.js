@@ -162,15 +162,27 @@ const topbar = document.getElementById("topbar");
 const backBtn = document.getElementById("backBtn");
 const progressFill = document.getElementById("progressFill");
 const stepCounter = document.getElementById("stepCounter");
-const laterBtn = document.getElementById("laterBtn");
 
-/* Сквозная кнопка «Пройти потом» — одна точка настройки.
+/* Сквозная ссылка «Пройти потом» — одна точка настройки.
  * Сценарий ещё не выбран (бот / сбор контакта / напоминание),
- * поэтому пока заглушка. Вся логика кнопки живёт здесь. */
+ * поэтому пока заглушка. Вся логика ссылки живёт здесь. */
 function laterAction() {
   // TODO: подключить сценарий «пройти потом»
 }
-laterBtn.addEventListener("click", laterAction);
+
+// Ссылка живёт под главной кнопкой экрана; на экранах без кнопки
+// (выбор пола, расчёт) встаёт в конец карточки.
+function attachLaterLink() {
+  const card = stage.firstElementChild;
+  if (!card) return;
+  const host = card.querySelector(".cover-actions, .next-wrap, .result-actions") || card;
+  const link = el(`<button class="later-btn">Пройти потом</button>`);
+  link.addEventListener("click", laterAction);
+  // На результате кнопок несколько — ссылка встаёт в конец, чтобы их не разрывать.
+  const btn = host.classList.contains("result-actions") ? null : host.querySelector(".btn-primary");
+  if (btn && btn.parentElement === host) btn.insertAdjacentElement("afterend", link);
+  else host.appendChild(link);
+}
 
 backBtn.addEventListener("click", () => {
   if (state.step > 0) { state.dir = -1; state.step--; render(); }
@@ -187,10 +199,8 @@ function render() {
   const qSteps = STEPS.filter(s => !["cover", "calc", "result"].includes(s.kind)).length;
   const qIndex = STEPS.slice(0, state.step).filter(s => !["cover", "calc", "result"].includes(s.kind)).length;
 
-  // Топбар виден всегда — ради сквозной кнопки «Пройти потом».
-  // На обложке, экране расчёта и результате остальные элементы скрыты.
   const showBar = !["cover", "calc", "result"].includes(step.kind);
-  topbar.classList.toggle("bare", !showBar);
+  topbar.hidden = !showBar;
   if (showBar) {
     progressFill.style.width = `${Math.round((qIndex / qSteps) * 100)}%`;
     stepCounter.textContent = `${qIndex + 1} / ${qSteps}`;
@@ -204,6 +214,7 @@ function render() {
     calc: renderCalc, result: renderResult,
   };
   renderers[step.kind](step);
+  attachLaterLink();
   if (state.dir === -1) {
     const card = stage.firstElementChild;
     if (card) card.classList.add("slide-back");
@@ -226,7 +237,6 @@ function renderCover() {
       <p class="cover-sub">Биологический возраст — показатель того, насколько молодым чувствует себя ваше тело. Оценим его по 9 показателям здоровья.</p>
       <div class="cover-badges">
         <span class="badge">⏱️ 2 минуты</span>
-        <span class="badge">🎓 Модель NUS</span>
         <span class="badge">🆓 Бесплатно</span>
       </div>
       <div class="cover-actions">
@@ -683,7 +693,7 @@ function pluralPok(n) {
 }
 
 function confetti() {
-  const colors = ["#2f6bff", "#4ade80", "#fbbf24", "#f472b6", "#38bdf8"];
+  const colors = ["#7b87e8", "#4ade80", "#fbbf24", "#f472b6", "#a6aef0"];
   for (let i = 0; i < 50; i++) {
     const c = document.createElement("div");
     c.className = "confetti";
