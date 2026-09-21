@@ -175,7 +175,9 @@ function laterAction() {
 function attachLaterLink() {
   const card = stage.firstElementChild;
   if (!card) return;
-  const host = card.querySelector(".cover-actions, .next-wrap, .result-actions") || card;
+  // На обложке host — сама карточка, поэтому ссылка встаёт после подписи
+  // «9 вопросов, 2 минуты…», а не сразу под кнопкой.
+  const host = card.querySelector(".next-wrap, .result-actions") || card;
   const link = el(`<button class="later-btn">Пройти потом</button>`);
   link.addEventListener("click", laterAction);
   // На результате кнопок несколько — ссылка встаёт в конец, чтобы их не разрывать.
