@@ -240,6 +240,7 @@ function renderCover() {
       <div class="cover-badges">
         <span class="badge">⏱️ 2 минуты</span>
         <span class="badge">📝 9 вопросов</span>
+        <span class="badge">🆓 Бесплатно</span>
       </div>
       <div class="cover-actions">
         <button class="btn-primary">Узнать свой биологический возраст</button>
