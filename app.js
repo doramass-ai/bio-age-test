@@ -36,7 +36,9 @@ const MMOL_TO_MGDL = 38.67; // ХС-ЛПВП: ммоль/л → мг/дл
 const LINKS = {
   threadsFallback: "https://www.threads.com",
   wowfit: "https://wowfit.ru",
-  // telegramBot: "https://t.me/<бот>", // бот ещё не создан — кнопка «Узнать позже» скрыта
+  // Параметр start приходит в бота первым сообщением — по нему видно,
+  // что человек пришёл из квиза, а не из рекламы или поиска.
+  telegramBot: "https://t.me/wowfit_bot?start=bioage",
 };
 function threadsUrl() {
   const post = new URLSearchParams(location.search).get("post");
@@ -164,10 +166,9 @@ const progressFill = document.getElementById("progressFill");
 const stepCounter = document.getElementById("stepCounter");
 
 /* Сквозная ссылка «Пройти потом» — одна точка настройки.
- * Сценарий ещё не выбран (бот / сбор контакта / напоминание),
- * поэтому пока заглушка. Вся логика ссылки живёт здесь. */
+ * Ведёт в телеграм-бот, чтобы человек вернулся к тесту позже. */
 function laterAction() {
-  // TODO: подключить сценарий «пройти потом»
+  window.open(LINKS.telegramBot, "_blank", "noopener");
 }
 
 // Ссылка живёт под главной кнопкой экрана; на экранах без кнопки
