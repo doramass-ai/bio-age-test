@@ -36,9 +36,9 @@ const MMOL_TO_MGDL = 38.67; // ХС-ЛПВП: ммоль/л → мг/дл
 const LINKS = {
   threadsFallback: "https://www.threads.com",
   wowfit: "https://wowfit.ru",
-  // Параметр start приходит в бота первым сообщением — по нему видно,
-  // что человек пришёл из квиза, а не из рекламы или поиска.
-  telegramBot: "https://t.me/wowfit_bot?start=bioage",
+  // telegramBot: "https://t.me/<бот>?start=bioage",
+  // Свой бот ещё не создан. Когда появится — раскомментировать и вписать
+  // адрес; параметр start=bioage отделит трафик квиза от рекламы и поиска.
 };
 function threadsUrl() {
   const post = new URLSearchParams(location.search).get("post");
@@ -166,7 +166,10 @@ const progressFill = document.getElementById("progressFill");
 const stepCounter = document.getElementById("stepCounter");
 
 /* Сквозная ссылка «Пройти потом» — одна точка настройки.
- * Ведёт в телеграм-бот, чтобы человек вернулся к тесту позже. */
+ * Должна вести в свой телеграм-бот; пока он не создан, ссылка скрыта,
+ * чтобы не отправлять людей в чужой бот и не давать мёртвый клик. */
+const LATER_LINK_READY = false;
+
 function laterAction() {
   window.open(LINKS.telegramBot, "_blank", "noopener");
 }
@@ -174,6 +177,7 @@ function laterAction() {
 // Ссылка живёт под главной кнопкой экрана; на экранах без кнопки
 // (выбор пола, расчёт) встаёт в конец карточки.
 function attachLaterLink() {
+  if (!LATER_LINK_READY) return;
   const card = stage.firstElementChild;
   if (!card) return;
   // На обложке host — сама карточка, поэтому ссылка встаёт после подписи
