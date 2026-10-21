@@ -589,6 +589,92 @@ const TIPS = {
   waist: "<b>Уменьшить талию:</b> дефицит калорий + белок в каждом приёме пищи + 8–10 тысяч шагов в день работают лучше любых «жиросжигателей».",
 };
 
+/* =====================================================================
+ * Картинка для сторис
+ * В Instagram нельзя опубликовать из браузера — нет веб-интента.
+ * Поэтому рисуем PNG в формате сторис и отдаём его системному
+ * «Поделиться»: там есть и Instagram, и Threads. На десктопе,
+ * где такого диалога нет, картинка просто скачивается.
+ * =================================================================== */
+const SHARE_W = 1080, SHARE_H = 1920;
+// На локальном сервере в картинку не должен попасть localhost
+const SHARE_HOST = /^(localhost|127\.|\[::1\])/.test(location.hostname)
+  ? "cn.wowfit.pro" : location.host;
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
+
+async function buildShareImage({ baShown, gapPlain, age }) {
+  const c = document.createElement("canvas");
+  c.width = SHARE_W; c.height = SHARE_H;
+  const ctx = c.getContext("2d");
+
+  const g = ctx.createLinearGradient(0, 0, SHARE_W, SHARE_H);
+  g.addColorStop(0, "#7b87e8");
+  g.addColorStop(1, "#4f5bbf");
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, SHARE_W, SHARE_H);
+
+  // Без этого canvas нарисует системным шрифтом, а не Onest
+  try {
+    await Promise.all([
+      document.fonts.load("800 320px Onest"),
+      document.fonts.load("600 48px Onest"),
+      document.fonts.load("400 40px Onest"),
+    ]);
+  } catch (e) { /* шрифт не догрузился — рисуем тем, что есть */ }
+
+  ctx.textAlign = "center";
+  const mid = SHARE_W / 2;
+
+  ctx.font = "400 150px Onest, sans-serif";
+  ctx.fillText("⏳", mid, 450);
+
+  ctx.fillStyle = "rgba(255,255,255,.8)";
+  ctx.font = "600 46px Onest, sans-serif";
+  ctx.fillText("Мой биологический возраст", mid, 660);
+
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "800 320px Onest, sans-serif";
+  ctx.fillText(String(baShown), mid, 980);
+
+  ctx.font = "600 64px Onest, sans-serif";
+  ctx.fillText(plural(baShown), mid, 1070);
+
+  // Плашка с разрывом
+  ctx.font = "600 48px Onest, sans-serif";
+  const pillText = gapPlain;
+  const pillW = ctx.measureText(pillText).width + 90;
+  ctx.fillStyle = "rgba(255,255,255,.18)";
+  roundRect(ctx, mid - pillW / 2, 1150, pillW, 110, 55);
+  ctx.fill();
+  ctx.fillStyle = "#ffffff";
+  ctx.fillText(pillText, mid, 1220);
+
+  ctx.fillStyle = "rgba(255,255,255,.75)";
+  ctx.font = "400 44px Onest, sans-serif";
+  ctx.fillText(`По паспорту — ${age}`, mid, 1360);
+
+  ctx.fillStyle = "rgba(255,255,255,.8)";
+  ctx.font = "400 44px Onest, sans-serif";
+  ctx.fillText("Проверь свой за 2 минуты", mid, 1680);
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "800 58px Onest, sans-serif";
+  ctx.fillText(SHARE_HOST, mid, 1770);
+
+  // JPEG вместо PNG: градиент в PNG весит около мегабайта, это долго грузится
+  // в мессенджерах, а на фотографии разницы не видно.
+  return new Promise(res => c.toBlob(res, "image/jpeg", 0.92));
+}
+
+
 function renderResult() {
   const r = computeResult();
   const a = state.answers;
@@ -599,6 +685,11 @@ function renderResult() {
   if (r.gap <= -2) { gapClass = "younger"; gapText = `🎉 На ${gapRounded} ${plural(gapRounded)} моложе паспорта`; }
   else if (r.gap < 2) { gapClass = "same"; gapText = "⚖️ Совпадает с паспортным возрастом"; }
   else { gapClass = "older"; gapText = `⚠️ На ${gapRounded} ${plural(gapRounded)} старше паспорта`; }
+
+  // Тот же разрыв, но без эмодзи — для картинки в сторис
+  const gapPlain = r.gap <= -2 ? `На ${gapRounded} ${plural(gapRounded)} моложе паспорта`
+    : r.gap < 2 ? "Совпадает с паспортом"
+    : `На ${gapRounded} ${plural(gapRounded)} старше паспорта`;
 
   // Позиция маркера на шкале CA−15 … CA+15
   const pos = Math.min(97, Math.max(3, 50 + (r.gap / 15) * 50));
@@ -645,7 +736,9 @@ function renderResult() {
       </div>`}
 
       <div class="result-actions">
-        <button class="btn-primary" id="threadsBtn">💬 Вернуться в Threads и поделиться</button>
+        <button class="btn-primary" id="shareBtn">📸 Поделиться результатом</button>
+        <div class="copy-toast" id="shareToast" hidden></div>
+        <button class="btn-secondary" id="threadsBtn">💬 Вернуться в Threads и прокомментировать</button>
         <div class="copy-toast" id="copyToast" hidden>Результат скопирован — вставьте его в комментарий ✌️</div>
         <a class="btn-secondary" href="${LINKS.wowfit}" target="_blank" rel="noopener">Узнать больше про WowFit</a>
         <button class="btn-ghost" id="restartBtn">Пройти тест заново</button>
@@ -653,6 +746,47 @@ function renderResult() {
 
       <p class="disclaimer">Оценка построена на популяционной линейной модели Healthspan Copilot (National University of Singapore), обученной на выборке NHANES/CDC (n = 276). Это экспериментальный индекс здоровья, а не медицинская диагностика и не валидированные «часы старения». Результат не заменяет консультацию врача.</p>
     </div>`);
+
+  /* Картинку готовим заранее: на iOS системное «Поделиться» нужно вызвать
+   * сразу по клику, иначе браузер посчитает вызов не пользовательским. */
+  const shareText = `Мой биологический возраст: ${baShown} ${plural(baShown)} (по паспорту ${a.age}). Проверь свой: ${location.origin + location.pathname}`;
+  let shareFile = null;
+  const makeFile = () => buildShareImage({ baShown, gapPlain, age: a.age })
+    .then(blob => blob && new File([blob], "moy-biologicheskiy-vozrast.jpg", { type: "image/jpeg" }))
+    .catch(() => null);
+  makeFile().then(f => { shareFile = f; });
+
+  card.querySelector("#shareBtn").addEventListener("click", async () => {
+    const toast = card.querySelector("#shareToast");
+    const file = shareFile || await makeFile();
+    if (!file) {
+      toast.hidden = false;
+      toast.textContent = "Не получилось собрать картинку — попробуйте ещё раз";
+      return;
+    }
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      try {
+        await navigator.share({ files: [file], text: shareText });
+        return;
+      } catch (e) {
+        if (e && e.name === "AbortError") return; // человек закрыл окно сам
+      }
+    }
+    // Системного диалога нет (обычно десктоп) — отдаём файл и текст
+    const url = URL.createObjectURL(file);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = file.name;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 10000);
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(shareText).catch(() => {});
+    }
+    toast.hidden = false;
+    toast.textContent = "Картинка скачана — добавьте её в сторис. Текст скопирован.";
+  });
 
   card.querySelector("#restartBtn").addEventListener("click", () => {
     state.answers = {}; state.step = 0; state.dir = 1; render();
