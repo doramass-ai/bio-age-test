@@ -35,7 +35,7 @@ const MMOL_TO_MGDL = 38.67; // ХС-ЛПВП: ммоль/л → мг/дл
  * Иначе — запасная ссылка ниже. */
 const LINKS = {
   threadsFallback: "https://www.threads.com",
-  wowfit: "https://wowfit.ru",
+  wowfit: "https://wowfit.pro",
   // Параметр start приходит в бота первым сообщением — по нему видно,
   // что человек пришёл из квиза, а не из рекламы или поиска.
   telegramBot: "https://t.me/wowfit_bioage_bot?start=bioage",
