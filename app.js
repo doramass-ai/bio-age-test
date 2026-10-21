@@ -182,11 +182,10 @@ function attachLaterLink() {
   if (!card) return;
   // На обложке host — сама карточка, поэтому ссылка встаёт после подписи
   // «9 вопросов, 2 минуты…», а не сразу под кнопкой.
-  const host = card.querySelector(".next-wrap, .result-actions") || card;
+  const host = card.querySelector(".next-wrap, .result-foot") || card;
   const link = el(`<button class="later-btn">Пройти потом</button>`);
   link.addEventListener("click", laterAction);
-  // На результате кнопок несколько — ссылка встаёт в конец, чтобы их не разрывать.
-  const btn = host.classList.contains("result-actions") ? null : host.querySelector(".btn-primary");
+  const btn = host.querySelector(".btn-primary");
   if (btn && btn.parentElement === host) btn.insertAdjacentElement("afterend", link);
   else host.appendChild(link);
 }
@@ -738,10 +737,14 @@ function renderResult() {
       <div class="result-actions">
         <button class="btn-primary" id="threadsBtn">💬 Вернуться в Threads и прокомментировать</button>
         <div class="copy-toast" id="copyToast" hidden>Результат скопирован — вставьте его в комментарий ✌️</div>
-        <button class="btn-secondary" id="shareBtn">📸 Поделиться результатом</button>
+        <button class="btn-secondary" id="shareBtn">📸 Рассказать в stories</button>
         <div class="copy-toast" id="shareToast" hidden></div>
         <a class="btn-secondary" href="${LINKS.wowfit}" target="_blank" rel="noopener">Узнать больше про WowFit</a>
-        <button class="btn-ghost" id="restartBtn">Пройти тест заново</button>
+      </div>
+
+      <div class="result-foot">
+        <button class="later-btn" id="restartBtn">Пройти ещё раз</button>
+        <span class="foot-sep">или</span>
       </div>
 
       <p class="disclaimer">Оценка построена на популяционной линейной модели Healthspan Copilot (National University of Singapore), обученной на выборке NHANES/CDC (n = 276). Это экспериментальный индекс здоровья, а не медицинская диагностика и не валидированные «часы старения». Результат не заменяет консультацию врача.</p>
