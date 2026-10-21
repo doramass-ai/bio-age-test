@@ -166,9 +166,9 @@ const progressFill = document.getElementById("progressFill");
 const stepCounter = document.getElementById("stepCounter");
 
 /* Сквозная ссылка «Пройти потом» — одна точка настройки.
- * Должна вести в свой телеграм-бот; пока он не создан, ссылка скрыта,
- * чтобы не отправлять людей в чужой бот и не давать мёртвый клик. */
-const LATER_LINK_READY = false;
+ * Ведёт в свой телеграм-бот. Флаг гасит ссылку целиком, если бот
+ * недоступен: лучше её отсутствие, чем клик в пустоту. */
+const LATER_LINK_READY = true;
 
 function laterAction() {
   window.open(LINKS.telegramBot, "_blank", "noopener");
