@@ -736,10 +736,10 @@ function renderResult() {
       </div>`}
 
       <div class="result-actions">
-        <button class="btn-primary" id="shareBtn">📸 Поделиться результатом</button>
-        <div class="copy-toast" id="shareToast" hidden></div>
-        <button class="btn-secondary" id="threadsBtn">💬 Вернуться в Threads и прокомментировать</button>
+        <button class="btn-primary" id="threadsBtn">💬 Вернуться в Threads и прокомментировать</button>
         <div class="copy-toast" id="copyToast" hidden>Результат скопирован — вставьте его в комментарий ✌️</div>
+        <button class="btn-secondary" id="shareBtn">📸 Поделиться результатом</button>
+        <div class="copy-toast" id="shareToast" hidden></div>
         <a class="btn-secondary" href="${LINKS.wowfit}" target="_blank" rel="noopener">Узнать больше про WowFit</a>
         <button class="btn-ghost" id="restartBtn">Пройти тест заново</button>
       </div>
