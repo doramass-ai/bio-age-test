@@ -36,9 +36,9 @@ const MMOL_TO_MGDL = 38.67; // ХС-ЛПВП: ммоль/л → мг/дл
 const LINKS = {
   threadsFallback: "https://www.threads.com",
   wowfit: "https://wowfit.ru",
-  // telegramBot: "https://t.me/<бот>?start=bioage",
-  // Свой бот ещё не создан. Когда появится — раскомментировать и вписать
-  // адрес; параметр start=bioage отделит трафик квиза от рекламы и поиска.
+  // Параметр start приходит в бота первым сообщением — по нему видно,
+  // что человек пришёл из квиза, а не из рекламы или поиска.
+  telegramBot: "https://t.me/wowfit_bioage_bot?start=bioage",
 };
 function threadsUrl() {
   const post = new URLSearchParams(location.search).get("post");
